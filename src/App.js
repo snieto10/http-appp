@@ -11,20 +11,20 @@ class App extends Component {
 
   async componentDidMount() {
     const { data: posts } = await axios.get(apiEndpoint);
-
     this.setState({ posts });
   }
 
   handleAdd = async () => {
     const obj = { title: "a", body: "b" };
     const { data: post } = await axios.post(apiEndpoint, obj);
+
     const posts = [post, ...this.state.posts];
     this.setState({ posts });
   };
 
   handleUpdate = async (post) => {
     post.title = "UPDATED";
-    await axios.put(apiEndpoint + "/" + post.id, post);
+    await axios.put(`${apiEndpoint}/${post.id}`, post);
 
     const posts = [...this.state.posts];
     const index = posts.indexOf(post);
@@ -33,17 +33,10 @@ class App extends Component {
   };
 
   handleDelete = async (post) => {
-    const originalPosts = this.state.posts;
+    await axios.delete(apiEndpoint + "/" + post.id);
 
     const posts = this.state.posts.filter((p) => p.id !== post.id);
     this.setState({ posts });
-
-    try {
-      await axios.delete(apiEndpoint + "/" + post.id);
-    } catch (ex) {
-      alert("something failed");
-      this.setState({ posts: originalPosts });
-    }
   };
 
   render() {
