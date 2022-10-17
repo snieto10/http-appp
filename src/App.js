@@ -1,6 +1,8 @@
 import React, { Component } from "react";
+import { ToastContainer } from "react-toastify";
 import httpService from "./services/httpService";
 import "./App.css";
+import "react-toastify/dist/ReactToastify.css";
 import config from "./services/config.json";
 
 class App extends Component {
@@ -37,7 +39,7 @@ class App extends Component {
     const posts = this.state.posts.filter((p) => p.id !== post.id);
     this.setState({ posts });
     try {
-      await httpService.delete(config.apiEndpoint + "/" + post.id);
+      await httpService.delete("s" + config.apiEndpoint + "/" + post.id);
     } catch (ex) {
       if (ex.response && ex.response.status === 404)
         alert("delete failed, the state was restored");
@@ -48,6 +50,7 @@ class App extends Component {
   render() {
     return (
       <React.Fragment>
+        <ToastContainer />
         <button className="btn btn-primary" onClick={this.handleAdd}>
           Add
         </button>
